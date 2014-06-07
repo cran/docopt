@@ -1,0 +1,3 @@
+export(docopt)
+import(methods)
+import(stringr)

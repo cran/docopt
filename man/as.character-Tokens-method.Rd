@@ -1,0 +1,18 @@
+\docType{methods}
+\name{as.character,Tokens-method}
+\alias{as.character,Tokens-method}
+\title{to character}
+\usage{
+\S4method{as.character}{Tokens}(x, ...)
+}
+\arguments{
+  \item{x}{object to be coerced or tested.}
+
+  \item{...}{further arguments passed to or from other
+  methods.}
+}
+\description{
+to character
+}
+\keyword{internal}
+

@@ -1,0 +1,46 @@
+\name{docopt}
+\alias{docopt}
+\title{Parse \code{args} based on command-line interface described in \code{doc}.}
+\usage{
+docopt(doc, args, name = NULL, help = TRUE, version = NULL)
+}
+\arguments{
+  \item{doc}{\code{character} vector with command line
+  specification}
+
+  \item{args}{\code{character} vector of commandline
+  arguments. If \code{args} is missing
+  \code{commandArgs(trailingOnly=TRUE)} will be used.}
+
+  \item{name}{Currently not used}
+
+  \item{help}{\code{logical} should "-h" or "--help"
+  generate a usage string?}
+
+  \item{version}{\code{character}. If supplied the option
+  "-v" generates the given version number and stops.}
+}
+\value{
+named list with all parsed options, arguments and commands.
+}
+\description{
+\code{docopt} creates your command-line interface based on
+its description that you pass as \code{doc}. Such
+description can contain --options, <positional-argument>,
+commands, which could be [optional], (required), (mutually
+| exclusive) or repeated...
+}
+\examples{
+"Usage: my_program.R [-hso FILE] [--quiet | --verbose] [INPUT ...]
+
+-h --help    show this
+-s --sorted  sorted output
+-o FILE      specify output file [default: ./test.txt]
+--quiet      print less text
+--verbose    print more text" -> doc
+docopt(doc, "-s --quiet")
+}
+\references{
+http://docopt.org,
+}
+
