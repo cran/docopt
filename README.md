@@ -26,20 +26,20 @@ install_github("edwindj/docopt.R")
 It is tested against the tests defined for the reference implementation.
 It passes most tests. It currently fails tests that 
 
-- count arguments: `prog -v -v` should return `list(v=2)`
-- multiple prog statement: i.e. `prog -a \n prog -b`
+- count arguments: `my_prog.R -v -v` should return `list(v=2)`
+- multiple prog statement: i.e. `my_prog.R -a \n prog -b`
 
 The tests can be run using devtools `test()` and can be found in "inst/tests"
 
 Usage
 -----
 
-docopt uses the description of the commandline interface to parse command line
+docopt uses the description of the command-line interface to parse command line
 arguments.
 
 
 ```S
-'usage: prog [-a -r -m <msg>]
+'usage: my_prog.R [-a -r -m <msg>]
 
 options:
  -a        Add
@@ -48,7 +48,7 @@ options:
 
 # load the docopt library
 library(docopt)
-# retrieve the command line arguments
+# retrieve the command-line arguments
 opts <- docopt(doc)
 # what are the options?
 str(opts)

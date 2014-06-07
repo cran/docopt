@@ -21,16 +21,27 @@
 #' \code{commandArgs(trailingOnly=TRUE)} will be used.
 #' @param name Currently not used
 #' @param help \code{logical} should "-h" or "--help" generate a usage string?
-#' @param version \code{character}. If supplied the option "-v" generates 
+#' @param version \code{character}. If supplied the option "-v" generates
 #' the given version number and stops.
+#' @param strict \code{logical} if \code{TRUE} docopt will conform to docopt.py 
+#' in and output (\code{strip_names=FALSE} and \code{quoted_args=FALSE})
+#' @param strip_names if \code{TRUE} it will remove dashes and angles from the 
+#' resulting names and add these to the resulting list. 
+#' Note that this is different from docopt standard! 
+#' @param quoted_args if \code{TRUE} it will accept quoted arguments. 
+#' Note that this is different from docopt standard! 
 #' @return named list with all parsed options, arguments and commands.
-#' @references http://docopt.org,
+#' @references \url{http://docopt.org},
 #' @export
 #' @import stringr methods
-docopt <- function(doc, args, name=NULL, help=TRUE, version=NULL){
-  if (missing(args)){
-    args <- commandArgs(trailingOnly=TRUE)
+docopt <- function( doc, args=commandArgs(TRUE), name=NULL, help=TRUE, version=NULL
+                  , strict=FALSE, strip_names=!strict, quoted_args=!strict
+                  ){
+  # littler compatibility - map argv vector to args
+  if (exists("argv", where = .GlobalEnv, inherits = FALSE)) {
+    args = get("argv", envir = .GlobalEnv);
   }
+  
   args <- str_c(args, collapse=" ")
   usage <- printable_usage(doc, name)
   pot_options <- parse_doc_options(doc)
@@ -60,6 +71,10 @@ docopt <- function(doc, args, name=NULL, help=TRUE, version=NULL){
       value <- kv$value
       dict[kv$name()] <- list(value)
     }
+    if (isTRUE(strip_names)){
+      nms <- gsub("(^<)|(^\\-\\-?)|(>$)", "", names(dict))
+      dict[nms] <- dict
+    }
     return(dict)
   }
   stop(usage)
@@ -67,7 +82,7 @@ docopt <- function(doc, args, name=NULL, help=TRUE, version=NULL){
          
 # print help
 help <- function(doc){
-  cat(doc)
+  cat(doc, "\n")
 }
                    
 #print version
@@ -86,7 +101,7 @@ extras <- function(help, version=NULL, options, doc){
   }
   if (help && any(names(opts) %in% c("-h","--help"))){
     help <- str_replace_all(doc, "^\\s*|\\s*$", "")
-    cat(help)
+    cat(help,"\n")
     if (interactive()) stop() else {
       quit(save="no")
     }
