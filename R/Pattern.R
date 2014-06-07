@@ -53,8 +53,7 @@ Pattern <- setRefClass( "Pattern"
           }
           uniq
         },
-#     fix_list_arguments: ->
-#         """Find arguments that should accumulate values and fix them."""
+#       Find arguments that should accumulate values and fix them.
         fix_repeating_arguments = function(){
           eith <- lapply(either()$children, function(c) c$children)
           for (child in eith){
@@ -72,7 +71,7 @@ Pattern <- setRefClass( "Pattern"
                 }
                 if ( class(e) == "Command" 
                   || (class(e) == "Option" && e$argcount == 0)){
-                   e$value <- 0
+                   e$value <- 0L
                 }
               } 
             } 
@@ -80,7 +79,7 @@ Pattern <- setRefClass( "Pattern"
           .self
         },
         either = function(){
-          if (length(children) == 0){
+          if (length(children) == 0L){
             return(Either(list(Required(list(.self)))))
           }
           #browser()
@@ -94,11 +93,11 @@ Pattern <- setRefClass( "Pattern"
             groups <- tail(groups, -1)
             type <- c("Either", "Required","Optional", "OneOrMore", "AnyOptions")
             childtype <- sapply(.children, class)
-            m <- base::match(childtype, type, nomatch=0)
+            m <- base::match(childtype, type, nomatch=0L)
             
             if (any(m > 0)){
               # take first child bigger than zero
-              idx <- which(m > 0)[1]
+              idx <- which(m > 0L)[1]
               child <- .children[[idx]]
               .children <- .children[-idx]
               if (class(child) == "Either"){
@@ -121,77 +120,79 @@ Pattern <- setRefClass( "Pattern"
         }
 ))
 
-LeafPattern <- setRefClass( "LeafPattern"   
-  , fields=c("name", "value")
-  , methods=list(
-      flat = function(...){
-        types <- list(...)
-        if (length(l)==0 || class(.self) %in% types){
-          return(list(.self))
-        }
-        list()
-      },
-      match = function(left, collected=list()){
-        m <- single_match(left)
-        # if match is None:
-        #   return False, left, collected
-        if (is.null(m$match)){
-          return(matched(FALSE, left, collected))
-        }
-        # left_ = left[:pos] + left[pos + 1:]
-        left_ <- left[-m$pos]
-        # same_name = [a for a in collected if a.name == self.name]
-        same_name <- Filter(function(a){a$name == name}, collected)
-        # if type(self.value) in (int, list):
-        if (class(value) %in% c("integer", "list")){
-        #   if type(self.value) is int:
-          if (is.integer(value)){
-        #   increment = 1
-            increment <- 1
-          } else {
-        # else:
-        #   increment = ([match.value] if type(match.value) is str
-        #                else match.value)
-            increment <- m$match$value
-            if (is.character(increment)){
-              increment <- list(increment)
-            }
-          }
-          # if not same_name:
-          if (length(same_name)==0){
-            #   match.value = increment
-            match$value <- increment
-            # return True, left_, collected + [match]
-            return(matched(TRUE, left_, c(collected, match)))
-          }
-          val <- same_name[[1]]$value
-          # same_name[0].value += increment
-          # return True, left_, collected
-          same_name[[1]]$value <- if (is.integer(val)) val + increment else c(val, increment)
-          return(matched(TRUE, left_, collected))
-        }
-        # return True, left_, collected + [match]        
-        return(matched(TRUE, left_, c(collected, match)))
-      }
-    )
-  )
-BranchPattern <- setRefClass("BranchPattern", contains="Pattern"
-    , methods=list(
-      initialize = function(.children=list()){
-        children <<- .children
-      },
-      flat=function(...){
-        types <- list(...)
-        if (class(.self) %in% types){
-          return(list(.self))
-        }        
-        if (length(children) == 0){
-          return(list())
-        }
-        unlist(lapply(children, function(child){child$flat(...)}))
-      }
-    )
-)
+# LeafPattern <- setRefClass( "LeafPattern"   
+#   , fields=c("name", "value")
+#   , methods=list(
+#       flat = function(...){
+#         types <- list(...)
+#         if (length(l)==0 || class(.self) %in% types){
+#           return(list(.self))
+#         }
+#         list()
+#       },
+#       match = function(left, collected=list()){
+#         browser()
+#         m <- single_match(left)
+#         # if match is None:
+#         #   return False, left, collected
+#         if (is.null(m$match)){
+#           return(matched(FALSE, left, collected))
+#         }
+#         # left_ = left[:pos] + left[pos + 1:]
+#         left_ <- left[-m$pos]
+#         # same_name = [a for a in collected if a.name == self.name]
+#         same_name <- Filter(function(a){a$name == name}, collected)
+#         # if type(self.value) in (int, list):
+#         if (class(value) %in% c("integer", "list")){
+#           browser()
+#         #   if type(self.value) is int:
+#           if (is.integer(value)){
+#         #   increment = 1
+#             increment <- 1
+#           } else {
+#         # else:
+#         #   increment = ([match.value] if type(match.value) is str
+#         #                else match.value)
+#             increment <- m$match$value
+#             if (is.character(increment)){
+#               increment <- list(increment)
+#             }
+#           }
+#           # if not same_name:
+#           if (length(same_name)==0){
+#             #   match.value = increment
+#             match$value <- increment
+#             # return True, left_, collected + [match]
+#             return(matched(TRUE, left_, c(collected, match)))
+#           }
+#           val <- same_name[[1]]$value
+#           # same_name[0].value += increment
+#           # return True, left_, collected
+#           same_name[[1]]$value <- if (is.integer(val)) val + increment else c(val, increment)
+#           return(matched(TRUE, left_, collected))
+#         }
+#         # return True, left_, collected + [match]        
+#         return(matched(TRUE, left_, c(collected, match)))
+#       }
+#     )
+#   )
+# BranchPattern <- setRefClass("BranchPattern", contains="Pattern"
+#     , methods=list(
+#       initialize = function(.children=list()){
+#         children <<- .children
+#       },
+#       flat=function(...){
+#         types <- list(...)
+#         if (class(.self) %in% types){
+#           return(list(.self))
+#         }        
+#         if (length(children) == 0){
+#           return(list())
+#         }
+#         unlist(lapply(children, function(child){child$flat(...)}))
+#       }
+#     )
+# )
 # 
 # class BranchPattern(Pattern):
 #   
@@ -231,33 +232,23 @@ Argument <- setRefClass("Argument", contains="Pattern"
          #         args = (l for l in left when l.constructor is Argument)
          argsidx <- which(sapply(left, class) == "Argument")
          arg <- head(argsidx,1)       
-         #browser()
-         #         if not args.length then return [false, left, collected]
          if (!length(arg)){
            return(matched(FALSE, left, collected))
          }
          arg <- left[[arg]]
-         #         left = (l for l in left when l.toString() isnt args[0].toString())
          left <- Filter(function(l){!identical(l, arg)}, left)
-         #         if @value is null or @value.constructor isnt Array
          if (is.null(value) || !is.list(value)){
-         #             collected = collected.concat [new Argument @name(), args[0].value]
            collected <- c(collected, list(Argument(name(), arg$value)))
-         #             return [true, left, collected]
            return(matched(TRUE, left, collected))
          }
-         #         same_name = (a for a in collected \
-         #             when a.constructor is Argument and a.name() is @name())
          same_name <- Filter(function(a){
                                class(a) == "Argument" && identical(a$name(), name())
                              }
                             , collected)
-         #         if same_name.length > 0
          if (length(same_name)){
            same_name[[1]]$value <- c(same_name[[1]]$value, arg$value)
            return(matched(TRUE, left, collected))
          } else{
-         #             collected = collected.concat [new Argument @name(), [args[0].value]]
            collected <- c(collected, Argument(name(), arg$value))
            return(matched(TRUE, left, collected))
          }
@@ -307,33 +298,59 @@ Command <- setRefClass("Command"
 Option <- setRefClass("Option", contains="Pattern"
                      , fields = c("short", "long", "argcount", "value", "cardinality")
                      , methods = list(
-                       initialize= function(short=NULL, long=NULL, argcount=0, value=FALSE){
+                       initialize= function(short=NULL, long=NULL, argcount=0L, value=FALSE){
                          short <<- short
                          long <<- long
                          argcount <<- argcount
                          if (argcount && missing(value)){
                            value <<- NULL
                          } else value <<- value
-                         cardinality <<- 1
+                         cardinality <<- 1L
                        },
                        toString = function(){
-                         paste0("Option(",short,",",long,",",argcount,",", value,")")
+                         val <- value
+                         if (length(val) > 1){
+                           val <- paste0("[",paste0(val, collapse = ","),"]")
+                         }
+                         paste0("Option(",short,",",long,",",argcount,",", val,")")
                        },
-# 
-#     name: -> @long or @short
                        name = function(){
                          if (!is.null(long)) long else short
                        },
-#     match: (left, collected=[]) ->
        match = function(left, collected=list()){
-         #         left_ = (l for l in left when (l.constructor isnt Option \
-         #browser()
-         left_ <- Filter(function(l){
-           class(l) != "Option" || short != l$short || long != l$long
-         }, left)
-         #                  or @short isnt l.short or @long isnt l.long))
-         #         [left.join(', ') isnt left_.join(', '), left_, collected]
-         matched(!identical(left_, left), left_, collected)
+         pos <- single_match(left)
+         if (pos == 0){
+           return(matched(FALSE, left, collected))
+         }
+         match = left[[pos]]
+         left_ = left[-pos]
+         
+         same_name <- Filter( function(l) identical(name(), l$name())
+                            , collected)
+         if (class(value) %in% c("list", "integer")){
+           
+           if (is.integer(value)){
+             match$value <- 1L
+           }
+           
+           if (length(same_name)){  
+             if (is.integer(value)){
+               same_name[[1]]$value <- same_name[[1]]$value + match$value
+             } else {
+               same_name[[1]]$value <- c(same_name[[1]]$value, match$value)
+             }
+             #print(collected)
+             return(matched(TRUE, left_, collected))
+           }
+         }
+         #print(ls.str())
+         matched(TRUE, left_, c(collected,match))
+       },
+       single_match = function(left){
+         base::match( name()
+                    , sapply(left, function(l) l$name())
+                    , nomatch = 0
+                    )
        }
 ))
 
@@ -378,7 +395,7 @@ OneOrMore <- setRefClass("OneOrMore", contains="Pattern"
           #         l_ = []
           l_ <- character()
           #         times = 0
-          times <- 0
+          times <- 0L
           #         while matched
           while (m$matched){
           #             # could it be that something didn't match but changed l or c?
@@ -386,7 +403,7 @@ OneOrMore <- setRefClass("OneOrMore", contains="Pattern"
             m <- children[[1]]$match(m$left, m$collected)
           #             times += if matched then 1 else 0
             if (m$matched){
-              times <- times + 1
+              times <- times + 1L
             }
           #             if l_.join(', ') is l.join(', ') then break
             if (identical(paste0(l_, collapse=", "), paste0(m$left, collapse=", "))){ 

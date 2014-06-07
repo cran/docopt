@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/edwindj/docopt.R.svg?branch=master)](https://travis-ci.org/edwindj/docopt.R)
+[![Build Status](https://travis-ci.org/docopt/docopt.R.svg?branch=master)](https://travis-ci.org/docopt/docopt.R)
 
 docopt
 ========================================================
@@ -19,7 +19,7 @@ The latest version of `docopt` can be installed using:
 
 ```S
 library(devtools)  # make sure to have devtools 1.4!
-install_github("edwindj/docopt.R")
+install_github("docopt/docopt.R")
 ```
 
 
@@ -27,7 +27,6 @@ It is tested against the tests defined for the reference implementation.
 It passes most tests. It currently fails tests that 
 
 - count arguments: `my_prog.R -v -v` should return `list(v=2)`
-- multiple prog statement: i.e. `my_prog.R -a \n prog -b`
 
 The tests can be run using devtools `test()` and can be found in "inst/tests"
 
@@ -50,8 +49,8 @@ options:
 library(docopt)
 # retrieve the command-line arguments
 opts <- docopt(doc)
-# what are the options?
-str(opts)
+# what are the options? Note that stripped versions of the parameters are added to the returned list
+str(opts)  
 ```
 
 ```
@@ -59,6 +58,9 @@ str(opts)
 ##  $ -a: logi FALSE
 ##  $ -r: logi FALSE
 ##  $ -m: chr "<msg>"
+##  $ a: logi FALSE
+##  $ r: logi FALSE
+##  $ m: chr "<msg>"
 ```
 
 ```S
@@ -73,4 +75,9 @@ str(opts)
 ##  $ -a: logi FALSE
 ##  $ -r: logi FALSE
 ##  $ -m: chr "Hello"
+##  $ a: logi FALSE
+##  $ r: logi FALSE
+##  $ m: chr "Hello"
+```
+
 ```
