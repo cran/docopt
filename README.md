@@ -1,3 +1,5 @@
+![version](http://www.r-pkg.org/badges/version/docopt)
+![downloads](http://cranlogs.r-pkg.org/badges/docopt)
 [![Build Status](https://travis-ci.org/docopt/docopt.R.svg?branch=master)](https://travis-ci.org/docopt/docopt.R)
 
 docopt
@@ -11,6 +13,7 @@ docopt
 For more information see [docopt.org](http://docopt.org)
 
 R package `docopt` is an implementation of [docopt](http://docopt.org) in the R language.
+See my presentation on the [useR! 2014](http://www.slideshare.net/EdwindeJonge1/docopt-user2014) for more details.
 
 Install
 -------
@@ -80,4 +83,6 @@ str(opts)
 ##  $ m: chr "Hello"
 ```
 
-```
+## Note
+
+**There is an issue with using `-g` and `-gui` with `docopt.R` as reported on [Stackoverflow](http://stackoverflow.com/questions/30698581/how-to-prevent-command-line-args-from-being-interpreted-by-r-vs-only-by-my-scri/30751839#30751839). `Rscript` filters on `-g` and `-gui` before `docopt.R` can access them.**
