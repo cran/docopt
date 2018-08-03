@@ -1,19 +1,17 @@
 Package: docopt
 Type: Package
 Title: Command-Line Interface Specification Language
-Version: 0.4.5
-Date: 2015-06-10
+Version: 0.6
 Author: Edwin de Jonge (edwindjonge@gmail.com)
 Maintainer: Edwin de Jonge <edwindjonge@gmail.com>
 Description: Define a command-line interface by just giving it
     a description in the specific format.
 License: MIT + file LICENSE
 URL: https://github.com/docopt/docopt.R
-Imports: stringr
 Depends: methods
 Suggests: testthat
-RoxygenNote: 5.0.1
+RoxygenNote: 6.1.0
 NeedsCompilation: no
-Packaged: 2016-06-13 08:15:09 UTC; Edwin
+Packaged: 2018-08-03 07:03:09 UTC; edwin
 Repository: CRAN
-Date/Publication: 2016-06-13 13:07:08
+Date/Publication: 2018-08-03 07:20:02 UTC

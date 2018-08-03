@@ -1,6 +1,8 @@
 ![version](http://www.r-pkg.org/badges/version/docopt)
 ![downloads](http://cranlogs.r-pkg.org/badges/docopt)
 [![Build Status](https://travis-ci.org/docopt/docopt.R.svg?branch=master)](https://travis-ci.org/docopt/docopt.R)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/docopt/docopt.R?branch=master&svg=true)](https://ci.appveyor.com/project/docopt/docopt.R)
+[![Depsy](http://depsy.org/api/package/cran/docopt/badge.svg)](http://depsy.org/package/r/docopt)
 
 docopt
 ========================================================
@@ -82,7 +84,3 @@ str(opts)
 ##  $ r: logi FALSE
 ##  $ m: chr "Hello"
 ```
-
-## Note
-
-**There is an issue with using `-g` and `-gui` with `docopt.R` as reported on [Stackoverflow](http://stackoverflow.com/questions/30698581/how-to-prevent-command-line-args-from-being-interpreted-by-r-vs-only-by-my-scri/30751839#30751839). `Rscript` filters on `-g` and `-gui` before `docopt.R` can access them.**

@@ -3,7 +3,7 @@ DQUOTED <- "\"(.*?)\""
 
 extract <- function(s, pat){
   if (length(s)) {
-    stringr::str_extract_all(s, pat)[[1]]
+    str_extract_all(s, pat)[[1]]
   } else {
     s
   }
@@ -20,6 +20,7 @@ Tokens <- setRefClass( "Tokens"
        if (as_is){
          .tokens <- tokens
        } else {
+         #browser()
          .tokens <- gsub("^\\s+|\\s+$", "", tokens)
          if (length(.tokens)){
            args <- extract(.tokens, "<.*?>")
