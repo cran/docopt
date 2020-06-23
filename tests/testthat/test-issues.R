@@ -5,7 +5,8 @@ test_that("quoted arguments work (#2)", {
   Usage:
   exampleScript <arg1>
   "
-  docopt(doc, "\"quoted arg\"")
+  opt <- docopt(doc, "\"quoted arg\"")
+  expect_equal(opt$arg1, "quoted arg")
 })
 
 
@@ -39,5 +40,47 @@ test_that("strings containing spaces are passed correctly (#11)", {
     -i <integers>, --integers=<integers>  Integers [default: 1]
   " -> doc
   opt <- docopt(doc, "-i ' c(1, 8)'")
+  expect_equal(opt$integers, " c(1, 8)")
+})
+
+test_that("quoted options are ok (#19)",{
+  '
+Usage:
+  style_files [--arg=<arg1>] <files>...
+
+Options:
+  --arg=<arg1>  Package where the style guide is stored [default: Arg1].
+
+' -> doc
   
+  arguments <- docopt::docopt(doc, "--arg='bla bla' f1")
+  expect_equal(arguments$arg, "bla bla")
+  expect_equal(arguments$files, "f1")
+})
+
+test_that("kebab case option to snake case",{
+'
+Usage: foo.R
+
+Options:
+  --do-the-thing=<dtt>  Do the Thing! [default: yeah].
+
+' -> doc
+  opt <- docopt::docopt(doc)
+  expect_equal(names(opt), c("--do-the-thing", "do_the_thing"))
+})
+
+test_that("quotes inside options are preserved",{
+  "style files.
+Usage:
+  style_files [--arg=<arg1>] <files>...
+
+Options:
+  --arg=<arg1>  Package where the style guide is stored [default: Arg1].
+
+" -> doc
+  
+  # expected behavior
+  opt = docopt(doc, c("--arg='tidyverse_style(scope= \"none\")'", "R/test.R"))
+  expect_equal(opt$arg, "tidyverse_style(scope= \"none\")")
 })

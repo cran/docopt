@@ -37,7 +37,6 @@
 docopt <- function( doc, args=commandArgs(TRUE), name=NULL, help=TRUE, version=NULL
                   , strict=FALSE, strip_names=!strict, quoted_args=!strict
                   ){
-  
   if (missing(args)) {
     # littler compatibility - map argv vector to args
     if (exists("argv", where = .GlobalEnv, inherits = FALSE)) {
@@ -46,12 +45,15 @@ docopt <- function( doc, args=commandArgs(TRUE), name=NULL, help=TRUE, version=N
 			args <- quote_spaced(args)
 		}
   }
+  
+  print(args)
   #browser()
-  args <- str_c(args, collapse=" ")
+  #args <- fix_quoted_options(args)
+  #args <- str_c(args, collapse=" ")
+  
   usage <- printable_usage(doc, name)
   pot_options <- parse_doc_options(doc)
   pattern <- parse_pattern(formal_usage(usage), pot_options)
-  
   for (anyopt in pattern$flat("AnyOptions")){
     #TODO remove options that are present in pattern
     if (class(anyopt) == "AnyOptions") anyopt$children <- pot_options$options
@@ -79,11 +81,14 @@ docopt <- function( doc, args=commandArgs(TRUE), name=NULL, help=TRUE, version=N
     }
     if (isTRUE(strip_names)){
       nms <- gsub("(^<)|(^\\-\\-?)|(>$)", "", names(dict))
+      # kebab case to snake case
+      nms <- gsub("-", "_", nms)
       dict[nms] <- dict
     }
     return(dict)
   }
-  stop(paste("\n",usage, collapse="\n  "), call. = FALSE)
+  stop(doc, call. = FALSE)
+  #stop(paste("\n",usage, collapse="\n  "), call. = FALSE)
 }
          
 # print help
@@ -150,6 +155,11 @@ quote_spaced <- function(x){
         , shQuote(x)
         , x
   )
+}
+
+# fix wrong shell quoting
+fix_quoted_options <- function(x){
+  x <- gsub("'(--?[[:alpha:]]+=)", "\\1'", x)
 }
 # 
 # class Dict extends Object

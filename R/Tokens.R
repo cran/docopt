@@ -1,12 +1,23 @@
 QUOTED <- "'(.*?)'"
 DQUOTED <- "\"(.*?)\""
 
-extract <- function(s, pat){
-  if (length(s)) {
-    str_extract_all(s, pat)[[1]]
+# utility function
+store_ws <- function(x, invert=FALSE){
+  if (invert){
+    gsub("___", " ", x, fixed = TRUE)
   } else {
-    s
+    gsub(" ", "___", x, fixed = TRUE)
   }
+}
+
+# replaces values with white spaces
+ws_replace <- function(pattern, x){
+#  pattern <- "'(.*?)'"
+  m <- gregexpr(pattern, x)
+  ms <- regmatches(x, m)
+  ms <- lapply(ms, store_ws)
+  regmatches(x, m) <- ms
+  x
 }
 
 Tokens <- setRefClass( "Tokens"
@@ -20,22 +31,20 @@ Tokens <- setRefClass( "Tokens"
        if (as_is){
          .tokens <- tokens
        } else {
-         #browser()
+         # browser()
+         # trimws
          .tokens <- gsub("^\\s+|\\s+$", "", tokens)
+         
          if (length(.tokens)){
-           args <- extract(.tokens, "<.*?>")
-           args <- c(args, extract(.tokens, QUOTED))
-           args <- c(args, extract(.tokens, DQUOTED))       
-           args_s <- gsub("\\s", "____", args)
-           for (i in seq_along(args)){
-              .tokens <- gsub(args[i], args_s[i], .tokens, fixed = T)
-           }
+           .tokens <- ws_replace("(<.*?>)", .tokens)
+           .tokens <- ws_replace(QUOTED, .tokens)
+           .tokens <- ws_replace(DQUOTED, .tokens)
            .tokens <- strsplit(.tokens, "\\s+")[[1]]
-           .tokens <- gsub("____", " ", .tokens, fixed=T)
+           .tokens <- store_ws(.tokens, invert = TRUE)
+           # remove quotation
+           # .tokens <- gsub("^'(.*)'$", "\\1", .tokens)
+           # .tokens <- gsub('^"(.*)"$', "\\1", .tokens)
          }
-         # remove quotes from tokens...
-         #.tokens <- gsub(QUOTED, "\\1", .tokens)
-         #.tokens <- gsub(DQUOTED, "\\1", .tokens)
        }
        tokens <<- .tokens
        if (missing(error)){
@@ -62,8 +71,11 @@ Tokens <- setRefClass( "Tokens"
        tokens <<- tail(tokens, -1)
        
        #remove optional quotes...
-       h <- gsub(QUOTED, "\\1", h)
-       h <- gsub(DQUOTED, "\\1", h)
+       h <- gsub("^'(.*)'$", "\\1", h)
+       h <- gsub("='(.*)'$", "=\\1", h)
+       
+       h <- gsub('^"(.*)"$', "\\1", h)
+       h <- gsub('="(.*)"$', "=\\1", h)
        
        if (length(h)) h else ""
      },
