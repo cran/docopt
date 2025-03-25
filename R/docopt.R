@@ -56,7 +56,7 @@ docopt <- function( doc, args=commandArgs(TRUE), name=NULL, help=TRUE, version=N
   pattern <- parse_pattern(formal_usage(usage), pot_options)
   for (anyopt in pattern$flat("AnyOptions")){
     #TODO remove options that are present in pattern
-    if (class(anyopt) == "AnyOptions") anyopt$children <- pot_options$options
+    if (inherits(anyopt,"AnyOptions")) anyopt$children <- pot_options$options
   }
   
   args <- parse_args(args, pot_options)
@@ -87,7 +87,25 @@ docopt <- function( doc, args=commandArgs(TRUE), name=NULL, help=TRUE, version=N
     }
     return(dict)
   }
-  stop(doc, call. = FALSE)
+  help(doc)
+  if (length(m$left) == 0){
+    stop("Missing argument(s)", call. = FALSE)
+  }
+  
+  m_args <- lapply(m$left, function(o){
+    if (!is.null(o$short)){
+      return(o$short)
+    }
+    if (!is.null(o$long)){
+      return(o$long)
+    }
+    ""
+  })
+  
+  m_args <- paste(sQuote(m_args), collapse=", ")
+  
+  stop("Unknown arguments: ",m_args, call. = FALSE)
+  # stop(doc, call. = FALSE)
   #stop(paste("\n",usage, collapse="\n  "), call. = FALSE)
 }
          

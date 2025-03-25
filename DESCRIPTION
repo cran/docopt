@@ -1,8 +1,10 @@
 Package: docopt
 Type: Package
 Title: Command-Line Interface Specification Language
-Version: 0.7.1
-Author: Edwin de Jonge (edwindjonge@gmail.com)
+Version: 0.7.2
+Authors@R: c(
+  person("Edwin", "de Jonge", email = "edwindjonge@gmail.com", role = c("aut", "cre"), 
+    comment=c(ORCID="0000-0002-6580-4718")))
 Maintainer: Edwin de Jonge <edwindjonge@gmail.com>
 Description: Define a command-line interface by just giving it
     a description in the specific format.
@@ -11,8 +13,10 @@ URL: https://github.com/docopt/docopt.R
 BugReports: https://github.com/docopt/docopt.R/issues
 Imports: methods
 Suggests: testthat
-RoxygenNote: 7.1.0
+RoxygenNote: 7.3.2
+Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2020-06-23 18:38:08 UTC; edwindj
+Packaged: 2025-03-25 21:06:03 UTC; edwin
+Author: Edwin de Jonge [aut, cre] (<https://orcid.org/0000-0002-6580-4718>)
 Repository: CRAN
-Date/Publication: 2020-06-24 08:50:03 UTC
+Date/Publication: 2025-03-25 21:30:06 UTC
